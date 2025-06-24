@@ -1,0 +1,59 @@
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    restart: on-failure
+    env_file: .env
+    volumes:
+      - mariadb_volume:/var/lib/mysql
+    tmpfs:
+      - /run/mysqld
+    networks:
+      - inception_network
+    ports:
+      - "3306:3306"
+
+  wordpress:
+    #build: ./requirements/wordpress
+    image: wordpress
+    restart: on-failure
+    env_file: .env
+    volumes:
+      - wordpress_volume:/var/www/wp
+    networks:
+      - inception_network
+    ports:
+      - "9000:9000"
+    depends_on:
+      - mariadb
+
+  nginx:
+    build: ./requirements/nginx
+    restart: on-failure
+    env_file: .env
+    volumes:
+      - wordpress_volume:/var/www/wp
+    networks:
+      - inception_network
+    ports:
+      - "443:443"
+    depends_on:
+      - wordpress
+
+networks:
+  inception_network:
+    driver: bridge
+
+volumes:
+  wordpress_volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: ./data/wordpress
+
+  mariadb_volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: ./data/mariadb
