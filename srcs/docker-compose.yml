@@ -45,15 +45,4 @@ networks:
 
 volumes:
   wordpress_volume:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: ./data/wordpress
-
   mariadb_volume:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: ./data/mariadb

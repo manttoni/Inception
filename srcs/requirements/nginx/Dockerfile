@@ -8,6 +8,12 @@ RUN mkdir -p /etc/nginx/ssl && \
 	-keyout /etc/nginx/ssl/amaula.42.fr.key \
 	-subj "/C=FI/ST=UUSIMA/L=HELSINKI/O=HIVE/OU=HIVE/CN=amaula.42.fr"
 
-COPY nginx.conf /etc/nginx/nginx.conf
+WORKDIR /etc/nginx/
+
+COPY nginx.conf .
+
+RUN adduser -D -H -s /sbin/nologin -g www-data -G www-data www-data
+
+EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]
