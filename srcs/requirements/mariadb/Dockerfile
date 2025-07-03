@@ -1,13 +1,13 @@
-FROM alpine:latest
+FROM debian
 
-WORKDIR /app
-VOLUME /app
+RUN apt update && apt upgrade && apt install -y mariadb-server
 
-RUN apk add --update mysql mysql-client && rm -f /var/cache/apk/*
+COPY 50-server.cnf /etc/mysql/mariadb.conf.d/.
+COPY init.sql /etc/mysql/init.sql
+COPY script.sh .
 
-COPY my.cnf /etc/my.cnf.d/my.cnf
-COPY start.sh /start.sh
+RUN mkdir -p /run/mysqld && \
+	chown -R mysql:mysql /run/mysqld && \
+	chmod +x script.sh
 
-EXPOSE 3306
-
-CMD ["/start.sh"]
+CMD ["./script.sh"]

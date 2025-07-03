@@ -2,6 +2,7 @@ all:
 	make up
 
 up:
+	mkdir -p srcs/volumes
 	docker compose -f srcs/docker-compose.yml up --build
 
 down:
