@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x /usr/local/bin/wp
 
+COPY wp-config.php /var/www/html
 COPY www.conf /etc/php/8.2/fpm/pool.d/
 COPY script.sh /usr/local/bin/script.sh
 RUN chmod +x /usr/local/bin/script.sh

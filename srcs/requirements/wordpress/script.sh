@@ -4,7 +4,18 @@ cd /var/www/html
 # Check if wp-config.php exists, if not, create it
 if [ ! -f wp-config.php ]; then
     echo "Creating wp-config.php"
-
+	
+    #echo "MARIADB_PASSWORD = $MARIADB_PASSWORD"
+    #echo "WORDPRESS_DB_HOST = $WORDPRESS_DB_HOST"
+    #echo "MARIADB_USER = $MARIADB_USER"
+    #echo "MARIADB_DATABASE = $MARIADB_DATABASE"
+    #echo "WORDPRESS_DB_HOST = $WORDPRESS_DB_HOST"
+    #echo "WP_URL = $WP_URL"
+    #echo "WP_TITLE = $WP_TITLE"
+    #echo "WP_ADMIN = $WP_ADMIN"
+    #echo "WP_ADMIN_MAIL = $WP_ADMIN_MAIL"
+    #echo "WP_USER = $WP_USER"
+    #echo "WP_USER_PWD = $WP_USER_PWD"
     # Wait for MariaDB to be ready
     mariadb-admin ping --protocol=tcp --host=$WORDPRESS_DB_HOST -u $MARIADB_USER --password=$MARIADB_PASSWORD --wait >/dev/null 2>/dev/null
 
