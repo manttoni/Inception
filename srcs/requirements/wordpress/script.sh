@@ -1,37 +1,39 @@
 #!/bin/bash
 cd /var/www/html
+
+# Check if wp-config.php exists, if not, create it
 if [ ! -f wp-config.php ]; then
-	echo "Creating wp-config.php"
+    echo "Creating wp-config.php"
 
-	mariadb-admin ping --protocol=tcp --host=mariadb -u $MDB_USER --password=$MDB_USER_PWD --wait >/dev/null 2>/dev/null
+    # Wait for MariaDB to be ready
+    mariadb-admin ping --protocol=tcp --host=$WORDPRESS_DB_HOST -u $MARIADB_USER --password=$MARIADB_PASSWORD --wait >/dev/null 2>/dev/null
 
-	wp core download    --allow-root \
-						--version='latest'
+    # Download WordPress if it's not already downloaded
+    wp core download --allow-root --version='latest'
 
-	wp config create    --allow-root \
-						--dbname=$MDB_NAME \
-						--dbuser=$MDB_USER \
-						--dbpass=$MDB_USER_PWD \
-						--dbhost=mariadb:3306
+    # Create wp-config.php with the correct environment variables
+    wp config create --allow-root \
+                     --dbname=$MARIADB_DATABASE \
+                     --dbuser=$MARIADB_USER \
+                     --dbpass=$MARIADB_PASSWORD \
+                     --dbhost=$WORDPRESS_DB_HOST
 
-	wp core install     --allow-root \
-						--skip-email \
-						--url=$WP_URL \
-						--title=$WP_TITLE \
-						--admin_user=$WP_ADMIN \
-						--admin_email=$WP_ADMIN_MAIL \
-						--admin_password=$WP_ADMIN_PWD
+    # Install WordPress
+    wp core install --allow-root \
+                    --skip-email \
+                    --url=$WP_URL \
+                    --title=$WP_TITLE \
+                    --admin_user=$WP_ADMIN \
+                    --admin_email=$WP_ADMIN_MAIL \
+                    --admin_password=$WP_ADMIN_PWD
 
-
-	wp user create      --allow-root \
-						--path=/var/www/html \
-						$WP_USER $WP_USER_MAIL \
-						--user_pass=$WP_USER_PWD
+    # Create WordPress user
+    wp user create --allow-root \
+                   --path=/var/www/html \
+                   $WP_USER $WP_USER_MAIL \
+                   --user_pass=$WP_USER_PWD
 fi
-curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-chmod +x wp-cli.phar
-./wp-cli.phar core download --allow-root
-./wp-cli.phar config create --dbname=wordpress --dbuser=wpuser --dbpass=password --dbhost=mariadb --allow-root
-./wp-cli.phar core install --url=localhost --title=inception --admin_user=admin --admin_password=admin --admin_email=admin@admin.com --allow-root
 
+# Start PHP-FPM (this keeps the container running)
 php-fpm8.2 -F
+

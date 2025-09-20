@@ -23,9 +23,12 @@ services:
     env_file: .env
     environment:
       WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-      WORDPRESS_DB_USER: ${MARIADB_USER}
-      WORDPRESS_DB_PASSWORD: ${MARIADB_PASSWORD}
+      WP_URL: ${WP_URL}
+      WP_USER: ${WP_USER}
+      WP_USER_PWD: ${MARIADB_PASSWORD}
+      WP_ADMIN_MAIL: ${WP_ADMIN_MAIL}
       WORDPRESS_DB_NAME: ${MARIADB_DATABASE}
+
     volumes:
       - ./volumes/wordpress_volume:/var/www/html
     networks:
