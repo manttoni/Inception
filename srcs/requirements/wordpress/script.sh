@@ -13,15 +13,20 @@ until mysqladmin ping -h"$WORDPRESS_DB_HOST" -u"$MARIADB_USER" -p"$MARIADB_PASSW
   sleep 2
 done
 
-if ! wp core is-installed --allow-root; then
-  echo "Creating wp-config.php..."
+export HTTP_HOST="localhost"  # Avoid PHP warning
 
+if [ ! -f wp-config.php ]; then
+  echo "Creating wp-config.php..."
   wp config create --allow-root \
     --dbname="$MARIADB_DATABASE" \
     --dbuser="$MARIADB_USER" \
     --dbpass="$MARIADB_PASSWORD" \
     --dbhost="$WORDPRESS_DB_HOST"
+else
+  echo "wp-config.php already exists, skipping creation."
+fi
 
+if ! wp core is-installed --allow-root; then
   echo "Installing WordPress..."
   wp core install --allow-root \
     --url="$WP_URL" \
