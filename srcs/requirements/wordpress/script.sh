@@ -3,17 +3,17 @@ cd /var/www/html
 if [ ! -f wp-config.php ]; then
 	echo "Creating wp-config.php"
 
-	mariadb-admin ping 
-		--protocol=tcp 
-		--host=$WORDPRESS_DB_HOST -u $MARIADB_USER 
-		--password=$MARIADB_PASSWORD 
+	mariadb-admin ping \
+		--protocol=tcp \
+		--host=$WORDPRESS_DB_HOST -u $MARIADB_USER \
+		--password=$MARIADB_PASSWORD \
 		--wait 
 
 	wp core download    --allow-root \
 		--version='latest'
 
 	wp config create    --allow-root \
-		--dbname=$MARIADB_USER \
+		--dbname=$MARIADB_DATABASE \
 		--dbuser=$MARIADB_USER \
 		--dbpass=$MARIADB_PASSWORD \
 		--dbhost=$WORDPRESS_DB_HOST
