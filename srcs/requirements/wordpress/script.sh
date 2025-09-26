@@ -44,6 +44,6 @@ if ! wp core is-installed --allow-root; then
 else
   echo "WordPress is already installed."
 fi
-
+echo "Done"
 php-fpm8.2 -F
 

@@ -10,7 +10,7 @@ services:
       MARIADB_USER: ${MARIADB_USER}
       MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     volumes:
-      - mariadb_volume:/var/lib/mysql
+      - ~/amaula/data/mariadb_volume:/var/lib/mysql
     networks:
       - inception_network
     ports:
@@ -30,7 +30,7 @@ services:
       WP_ADMIN_MAIL: ${WP_ADMIN_MAIL}
       WP_USER_MAIL: ${WP_USER_MAIL}
     volumes:
-      - ./volumes/wordpress_volume:/var/www/html
+      - ~/amaula/data/wordpress_volume:/var/www/html
     networks:
       - inception_network
     ports:
@@ -44,7 +44,7 @@ services:
     restart: on-failure
     env_file: .env
     volumes:
-      - ./volumes/wordpress_volume:/var/www/html
+      - ~/amaula/data/wordpress_volume:/var/www/html
     networks:
       - inception_network
     ports:
@@ -52,9 +52,10 @@ services:
     depends_on:
       - wordpress
 
+volumes:
+  mariadb_volume:
+  wordpress_volume:
 networks:
   inception_network:
     driver: bridge
 
-volumes:
-  mariadb_volume:
