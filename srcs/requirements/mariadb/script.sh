@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e  # Exit immediately if a command exits with a non-zero status
+set -e
 
 if [ ! -d "/var/lib/mysql/mysql" ]; then
   mysql_install_db --user=mysql --datadir=/var/lib/mysql
@@ -8,7 +8,7 @@ fi
 
 chown -R mysql:mysql /var/lib/mysql /run/mysqld /var/log/mysql
 
-mysqld_safe &
+mysqld_safe --log-bin &
 pid="$!"
 # Wait for MariaDB to be ready
 until mysqladmin ping --silent; do
@@ -16,7 +16,6 @@ until mysqladmin ping --silent; do
   sleep 2
 done
 
-# Create the database and user, and grant privileges this goes into a init-db.sh
 mysql -u root <<-EOSQL
   CREATE DATABASE IF NOT EXISTS ${MARIADB_DATABASE};
   CREATE USER IF NOT EXISTS '${MARIADB_USER}'@'%' IDENTIFIED BY '${MARIADB_PASSWORD}';
@@ -24,5 +23,4 @@ mysql -u root <<-EOSQL
   FLUSH PRIVILEGES;
 EOSQL
 echo "Done"
-#exec mysqld_safe
 wait $pid
