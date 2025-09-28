@@ -2,9 +2,9 @@ all:
 	make up
 
 up:
-	mkdir -p /home/amaula/data/mariadb_volume
-	sudo chown -R 100:101 /home/amaula/data/mariadb_volume
-	mkdir -p /home/amaula/data/wordpress_volume
+	mkdir -p ~/data/mariadb_volume
+#	chown -R 100:101 ~/data/mariadb_volume
+	mkdir -p ~/data/wordpress_volume
 	docker compose -f srcs/docker-compose.yml up --build
 
 down:
